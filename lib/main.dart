@@ -53,9 +53,7 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
     controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
-    // 增加曲线
-    final CurvedAnimation curve = CurvedAnimation(parent: controller, curve: Curves.bounceOut);
-    animation = Tween(begin: 0.0, end: 300.0).animate(curve);
+    animation = CurvedAnimation(parent: controller, curve: Curves.bounceOut);
     controller.forward();
   }
 
@@ -71,45 +69,32 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GrowTransition(
+      body: AnimatedLogo(
         animation: animation,
-        child: LogoWidget(),
       ),
     );
   }
 }
 
+class AnimatedLogo extends AnimatedWidget {
+  static final _opacityTween = Tween<double>(begin: 0.1, end: 1.0);
+  static final _sizeTween = Tween<double>(begin: 0.0, end: 300.0);
 
-class LogoWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      child: FlutterLogo(),
-    );
-  }
-}
-
-
-class GrowTransition extends StatelessWidget {
-  GrowTransition({this.child, this.animation});
-
-  final Widget child;
-  final Animation<double> animation;
+  AnimatedLogo({Key key, Animation<double> animation})
+      : super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;
     return Center(
-      child: AnimatedBuilder(
-          animation: animation,
-          builder: (BuildContext context, Widget child) {
-            return Container(
-              height: animation.value,
-              width: animation.value,
-              child: child,
-            );
-          },
-        child: child,
+      child: Opacity(
+        opacity: _opacityTween.evaluate(animation),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10.0),
+          height: _sizeTween.evaluate(animation),
+          width: _sizeTween.evaluate(animation),
+          child: FlutterLogo(),
+        ),
       ),
     );
   }
