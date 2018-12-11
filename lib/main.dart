@@ -52,11 +52,17 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
-    animation = Tween(begin: 0.0, end: 300.0).animate(controller)
-      ..addStatusListener((state) {
-        print(state);
-      });
+        AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    animation = Tween(begin: 0.0, end: 300.0).animate(controller);
+
+    animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        controller.reverse();
+      } else if(status == AnimationStatus.dismissed) {
+        controller.forward();
+      }
+    });
+
     controller.forward();
   }
 
