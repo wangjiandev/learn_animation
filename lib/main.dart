@@ -51,18 +51,11 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
-    animation = Tween(begin: 0.0, end: 300.0).animate(controller);
-
-    animation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
-        controller.reverse();
-      } else if(status == AnimationStatus.dismissed) {
-        controller.forward();
-      }
-    });
-
+    controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
+    // 增加曲线
+    final CurvedAnimation curve = CurvedAnimation(parent: controller, curve: Curves.bounceOut);
+    animation = Tween(begin: 0.0, end: 300.0).animate(curve);
     controller.forward();
   }
 
@@ -78,26 +71,45 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: AnimatedLogo(
+      body: GrowTransition(
         animation: animation,
+        child: LogoWidget(),
       ),
     );
   }
 }
 
-class AnimatedLogo extends AnimatedWidget {
-  AnimatedLogo({Key key, Animation<double> animation})
-      : super(key: key, listenable: animation);
+
+class LogoWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10.0),
+      child: FlutterLogo(),
+    );
+  }
+}
+
+
+class GrowTransition extends StatelessWidget {
+  GrowTransition({this.child, this.animation});
+
+  final Widget child;
+  final Animation<double> animation;
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> animation = listenable;
     return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10.0),
-        height: animation.value,
-        width: animation.value,
-        child: FlutterLogo(),
+      child: AnimatedBuilder(
+          animation: animation,
+          builder: (BuildContext context, Widget child) {
+            return Container(
+              height: animation.value,
+              width: animation.value,
+              child: child,
+            );
+          },
+        child: child,
       ),
     );
   }
