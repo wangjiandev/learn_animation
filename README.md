@@ -2,6 +2,12 @@
 
 A new Flutter application.
 
+- 基础动画,放大logo
+- 使用AnimatedWidget重构代码
+- 使用状态监听,循环动画
+- 使用AnimatedBuilder重构代码,将widget与动画分离
+- 并行动画,同时改变size和opacity值
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
