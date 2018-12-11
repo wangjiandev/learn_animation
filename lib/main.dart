@@ -54,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage>
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 800));
     animation = Tween(begin: 0.0, end: 300.0).animate(controller)
-      ..addListener(() {
-        setState(() {});
+      ..addStatusListener((state) {
+        print(state);
       });
     controller.forward();
   }
