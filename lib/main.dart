@@ -60,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage>
     controller.forward();
   }
 
-
   @override
   void dispose() {
     controller.dispose();
@@ -73,13 +72,26 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.0),
-          height: animation.value,
-          width: animation.value,
-          child: FlutterLogo(),
-        ),
+      body: AnimatedLogo(
+        animation: animation,
+      ),
+    );
+  }
+}
+
+class AnimatedLogo extends AnimatedWidget {
+  AnimatedLogo({Key key, Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.0),
+        height: animation.value,
+        width: animation.value,
+        child: FlutterLogo(),
       ),
     );
   }
